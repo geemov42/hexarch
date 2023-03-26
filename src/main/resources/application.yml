@@ -1,0 +1,55 @@
+management:
+  server:
+    port: 8280
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  cache:
+    caffeine:
+      spec: expireAfterWrite=1m,maximumSize=500
+    cache-names:
+      - CUSTOM_CACHE_NAME
+
+  main:
+    web-application-type: SERVLET
+    allow-bean-definition-overriding: true
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    root: error
+    io.geemov42: debug
+    sql: debug
+
+
+server:
+  port: 8080
