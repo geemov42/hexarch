@@ -171,8 +171,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
-          <source>${java.version}</source> <!-- depending on your project -->
-          <target>${java.version}</target> <!-- depending on your project -->
+          <source>15</source> <!-- depending on your project -->
+          <target>15</target> <!-- depending on your project -->
           <annotationProcessorPaths>
             <path>
               <groupId>org.mapstruct</groupId>

@@ -1,19 +1,18 @@
 spring:
-    jpa:
-        properties:
-            hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 5
-            hibernate.generate_statistics: true
-
-    test:
-      database:
-        replace: none
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 5
+      hibernate.generate_statistics: true
 
 management:
   server:
-      port: 8080
+    port: 8080
 
 logging:
-    level:
-        org.hibernate.stat: DEBUG
-        org.hibernate.SQL: DEBUG
-        org.hibernate.cache: DEBUG
+  level:
+    org.hibernate.stat: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.cache: DEBUG
