@@ -1,8 +1,9 @@
 package io.geemov42.hexarch.domain.business.todo.services;
 
 import io.geemov42.hexarch.domain.business.todo.TodoEntity;
+import io.geemov42.hexarch.domain.business.todo.exceptions.RandomTodoNotFoundException;
 import io.geemov42.hexarch.domain.business.todo.exceptions.TodoNotFoundException;
-import io.geemov42.hexarch.domain.business.todo.outbound.EboxService;
+import io.geemov42.hexarch.domain.business.todo.outbound.ExternalTodoService;
 import io.geemov42.hexarch.infrastructure.business.todo.TodoEntityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +23,10 @@ public class TodoServiceAdapter implements TodoService {
 
     // Never add repository of other domain, call only service layer
     private final TodoEntityRepository todoEntityRepository;
-    private final EboxService eboxService;
+    private final ExternalTodoService externalTodoService;
 
     @Override
     public Optional<TodoEntity> findTodoById(int id) {
-
-        int numberOfAvailableMessage = this.eboxService.countNumberOfAvailableMessage("ssinvalue");
-        log.info("We found {} messages", numberOfAvailableMessage);
 
         return this.todoEntityRepository.findById(id);
     }
@@ -53,6 +51,28 @@ public class TodoServiceAdapter implements TodoService {
         TodoEntity newTodo = TodoEntity.builder()
                 .title(title)
                 .description(description)
+                .build();
+
+        this.todoEntityRepository.save(newTodo);
+
+        return newTodo;
+    }
+
+    @Override
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Transactional
+    public TodoEntity createRandomTodo() {
+
+        Optional<String> title = this.externalTodoService.getRandomTodo();
+        log.info("We found todo : {}", title);
+
+        if (title.isEmpty()) {
+            throw RandomTodoNotFoundException.builder().reason("Todo from external service not found").build();
+        }
+
+        TodoEntity newTodo = TodoEntity.builder()
+                .title(title.get())
+                .description("Random todo")
                 .build();
 
         this.todoEntityRepository.save(newTodo);

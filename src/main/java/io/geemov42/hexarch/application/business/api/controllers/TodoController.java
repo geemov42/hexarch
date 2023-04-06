@@ -68,6 +68,14 @@ public class TodoController {
         return ResponseEntity.ok(this.todoDtoMapTodoEntityMapper.toDataObject(todoEntity));
     }
 
+    @PostMapping("/random")
+    public ResponseEntity<TodoDto> createRandomTodo() {
+
+        TodoEntity todoEntity = this.todoService.createRandomTodo();
+
+        return ResponseEntity.ok(this.todoDtoMapTodoEntityMapper.toDataObject(todoEntity));
+    }
+
     @PutMapping("/resolve/{id}")
     public ResponseEntity<TodoDto> markTodoAsResolved(@PathVariable("id") int idTodo) {
 
