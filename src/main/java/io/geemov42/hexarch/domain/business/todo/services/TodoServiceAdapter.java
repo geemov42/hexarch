@@ -63,15 +63,17 @@ public class TodoServiceAdapter implements TodoService {
     @Transactional
     public TodoEntity createRandomTodo() {
 
-        Optional<String> title = this.externalTodoService.getRandomTodo();
-        log.info("We found todo : {}", title);
+        String title;
+        try {
+            title = this.externalTodoService.getRandomTodo().orElseThrow();
+            log.info("We found todo : {}", title);
 
-        if (title.isEmpty()) {
+        } catch (Exception e) {
             throw RandomTodoNotFoundException.builder().reason("Todo from external service not found").build();
         }
 
         TodoEntity newTodo = TodoEntity.builder()
-                .title(title.get())
+                .title(title)
                 .description("Random todo")
                 .build();
 
